@@ -1,6 +1,7 @@
 __author__ = 'yanwei'
 import hashlib
 import sqlite3
+import datetime
 
 def md5(instr):
     a = hashlib.md5()
@@ -9,8 +10,11 @@ def md5(instr):
 
 class mydb(object):
     def __init__(self):
-        db = sqlite3.connect('vote.db');
+        db = sqlite3.connect('vote.db')
         self.db = db
+
+    def __del__(self):
+        self.db.close()
 
     def checkuserexists(self, userid):
         cs = self.db.cursor()
@@ -30,6 +34,14 @@ class mydb(object):
             cs.execute("insert into users values('%s', '%s', '%s')" %(userid, md5(password), chinese))
             self.db.commit()
             return True
+
+    def getChinese(self, userid):
+        cs = self.db.cursor()
+        cs.execute("select chinese from users where id='%s'" % userid)
+        result = cs.fetchall()
+        if len(result) > 0:
+            return result[0][0]
+        return ''
 
     def changepassword(self, userid, newpassword):
         if not self.checkuserexists(userid):
@@ -58,9 +70,35 @@ class mydb(object):
 
     def listusers(self):
         cs = self.db.cursor()
-        cs.execute("select userid, chinese, password from users")
+        cs.execute("select id, chinese, password from users")
         for i in cs.fetchall():
             print '\t'.join(i)
+
+    def getAllVotesToday(self):
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
+        cs = self.db.cursor()
+        cs.execute("select id, restaurant from votes where date='%s'" % today)
+        for i in cs.fetchall():
+            print '\t'.join(i)
+
+    def getMyVote(self, userid):
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
+        cs = self.db.cursor()
+        cs.execute("select restaurant from votes where id='%s' and date='%s'" % (userid, today))
+        result = cs.fetchall()
+        if len(result) > 0:
+            return result[0][0]
+        else:
+            return ''
+
+    def vote(self, userid, restaurant):
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
+        cs = self.db.cursor()
+        if self.getMyVote(userid) != '':
+            cs.execute("update votes set restaurant='%s' where id='%s' and date='%s'" % (restaurant, userid, today))
+        else:
+            cs.execute("insert into votes values('%s', '%s', '%s')" % (userid, today, restaurant))
+
 
 
 
