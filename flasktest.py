@@ -23,10 +23,10 @@ def index():
 def vote():
     if request.cookies.has_key('user'):
         db = myutils.mydb()
-        userid = request.cookies['user']
+        userid = request.cookies['user'].lower()
         cname = db.getChinese(userid)
-
-        return render_template('vote.html', name=cname, restaurants=['food1', 'food2'])
+        candidate_restaurants = db.getRestaurants()
+        return render_template('vote.html', name=cname, restaurants=candidate_restaurants)
     else:
         return redirect('/')
 

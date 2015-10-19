@@ -2,6 +2,7 @@ __author__ = 'yanwei'
 import hashlib
 import sqlite3
 import datetime
+import sys
 
 def md5(instr):
     a = hashlib.md5()
@@ -10,7 +11,7 @@ def md5(instr):
 
 class mydb(object):
     def __init__(self):
-        db = sqlite3.connect('vote.db')
+        db = sqlite3.connect(sys.path[0] + '/vote.db')
         self.db = db
 
     def __del__(self):
@@ -90,6 +91,12 @@ class mydb(object):
             return result[0][0]
         else:
             return ''
+
+    def getRestaurants(self):
+        cs = self.db.cursor()
+        cs.execute("select * from restaurants")
+        result = cs.fetchall()
+        return [x[0] for x in result]
 
     def vote(self, userid, restaurant):
         today = datetime.datetime.today().strftime("%Y-%m-%d")
