@@ -3,6 +3,7 @@ import hashlib
 import sqlite3
 import datetime
 import sys
+import os
 
 def md5(instr):
     a = hashlib.md5()
@@ -11,7 +12,7 @@ def md5(instr):
 
 class mydb(object):
     def __init__(self):
-        db = sqlite3.connect(sys.path[0] + '/vote.db')
+        db = sqlite3.connect( os.path.join(sys.path[0],'vote.db') )
         self.db = db
 
     def __del__(self):
@@ -79,8 +80,7 @@ class mydb(object):
         today = datetime.datetime.today().strftime("%Y-%m-%d")
         cs = self.db.cursor()
         cs.execute("select id, restaurant from votes where date='%s'" % today)
-        for i in cs.fetchall():
-            print '\t'.join(i)
+        return cs.fetchall()
 
     def getMyVote(self, userid):
         today = datetime.datetime.today().strftime("%Y-%m-%d")
@@ -105,6 +105,7 @@ class mydb(object):
             cs.execute("update votes set restaurant='%s' where id='%s' and date='%s'" % (restaurant, userid, today))
         else:
             cs.execute("insert into votes values('%s', '%s', '%s')" % (userid, today, restaurant))
+        self.db.commit()
 
 
 

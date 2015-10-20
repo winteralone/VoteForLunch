@@ -19,14 +19,25 @@ def index():
 
     return render_template('login.html')
 
-@app.route('/vote')
+@app.route('/vote', methods=['GET', 'POST'])
 def vote():
     if request.cookies.has_key('user'):
         db = myutils.mydb()
         userid = request.cookies['user'].lower()
         cname = db.getChinese(userid)
         candidate_restaurants = db.getRestaurants()
-        return render_template('vote.html', name=cname, restaurants=candidate_restaurants)
+        if request.method == 'POST' and request.form['voted'] != '':
+            db.vote(userid, request.form['voted'])
+        votes = db.getAllVotesToday()
+        vote_dict = {}
+        for uid, rest in votes:
+            if vote_dict.has_key(rest):
+                if uid not in vote_dict[rest]:
+                    vote_dict[rest] += ','+db.getChinese(uid)
+            else:
+                vote_dict[rest] = db.getChinese(uid)
+
+        return render_template('vote.html', name=cname, restaurants=candidate_restaurants, votes=vote_dict)
     else:
         return redirect('/')
 
@@ -56,5 +67,4 @@ def logout():
 
 
 if __name__ == '__main__':
-
     app.run(debug=True)
