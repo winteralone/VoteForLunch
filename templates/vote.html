@@ -7,14 +7,14 @@
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/custom.js"></script>
-    <title></title>
+    <title>午饭投票</title>
 </head>
 
 
 <div class="mycontainer">
 <div class="text-right"><a href="/logout">注销登录</a></div>
 <h3 class="text-center">{{ name }}，中午想去哪里吃？</h3>
-<form action="vote" method="POST">
+<form action="setvote" method="POST">
     <input type="text"  hidden='hidden' name="voted" id="voted"/>
     <div class="text-center">
     <input class="btn btn-primary" type="submit" value="投票"/>

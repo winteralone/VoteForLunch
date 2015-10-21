@@ -107,6 +107,19 @@ class mydb(object):
             cs.execute("insert into votes values('%s', '%s', '%s')" % (userid, today, restaurant))
         self.db.commit()
 
+    def sync_vote(self, vote_dict):
+        today = datetime.datetime.today().strftime("%Y-%m-%d")
+        cs = self.db.cursor()
+        for userid, restaurant in vote_dict.items():
+            cs.execute("select restaurant from votes where id='%s' and date='%s'" % (userid, today))
+            result = cs.fetchall()
+            if len(result) > 0:
+                cs.execute("update votes set restaurant='%s' where id='%s' and date='%s'" % (restaurant, userid, today))
+            else:
+                cs.execute("insert into votes values('%s', '%s', '%s')" % (userid, today, restaurant))
+        self.db.commit()
+
+
 
 
 
