@@ -4,6 +4,16 @@ body {
   background-color: #eee;
 }
 
+div.mycontainer
+{
+    width: 1000px;
+    margin: 0 auto;
+}
+
+td.option
+{
+    width: 200px;
+}
 .form-signin {
   max-width: 330px;
   padding: 15px;

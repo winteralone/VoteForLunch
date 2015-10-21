@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask import Flask
 from flask import request
@@ -7,9 +8,8 @@ from flask import redirect
 import datetime
 
 import myutils
-
-
 import sys
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -67,4 +67,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run('0.0.0.0', debug=True)
