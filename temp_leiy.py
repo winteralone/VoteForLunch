@@ -56,7 +56,7 @@ class ModelInfoDict(object):
 
 if __name__ == '__main__':
     kw_dict = ModelKeywordDict('keywords.txt')
-    info_dict = ModelInfoDict('http://someurl.com/model/info')
+    info_dict = ModelInfoDict('http://api.car.ctags.net/car/model/lists')
     
     a1 = Article('Not a car name', '1111,2222')
     a2 = Article('A4L', '2888')
